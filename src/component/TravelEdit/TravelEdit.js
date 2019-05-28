@@ -70,6 +70,7 @@ class TravelEdit extends Component {
     }  
   
     addExpense = (e) => {
+        e.preventDefault()
         let { travelReport } = this.state;
         const updatedExpenses = travelReport.additionalExpense.expenses.slice();
         updatedExpenses.push({price:"", description:""});
