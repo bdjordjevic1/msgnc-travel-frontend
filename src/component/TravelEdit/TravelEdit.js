@@ -109,7 +109,7 @@ class TravelEdit extends Component {
         var travelReport = this.state;
         console.log(travelReport)
     
-        fetch('http://localhost:8080/api/reports/generate', {
+        fetch('https://msgnc-travel.35.195.3.82.xip.io/api/reports/generate', {
             method: 'POST',
             body: JSON.stringify(travelReport),
             headers: new Headers({
@@ -129,11 +129,11 @@ class TravelEdit extends Component {
     }
 
     async componentDidMount() {
-        const currenciesResponse = await fetch(`http://localhost:8080/api/currencies`);
+        const currenciesResponse = await fetch(`https://msgnc-travel.35.195.3.82.xip.io/api/currencies`);
         const currenciesJson = await currenciesResponse.json();
         this.setState({ currencies: currenciesJson });
 
-        const locationResponse = await fetch(`http://localhost:8080/api/locations`);
+        const locationResponse = await fetch(`https://msgnc-travel.35.195.3.82.xip.io/api/locations`);
         const locationJson = await locationResponse.json();
         this.setState({ locations: locationJson });
       }
