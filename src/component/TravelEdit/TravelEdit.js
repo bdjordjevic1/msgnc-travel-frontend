@@ -39,9 +39,9 @@ class TravelEdit extends Component {
                     end: new Date()
                 },
                 meals: {
-                    BREAKFAST: 1,
-                    LUNCH: 2,
-                    DINNER: 3
+                    BREAKFAST: null,
+                    LUNCH: null,
+                    DINNER: null
                 },
                 dailyRate: 0     
             }
@@ -97,6 +97,23 @@ class TravelEdit extends Component {
                     travelPeriod: {
                        ...prevState.travelReport.dailyRateCalculation.travelPeriod,
                        [id]: date
+                    }
+                }
+            }
+        }))
+    }
+
+    addNumberOfMeals = (event) => {
+        let numberOfMeals = event.target.value;
+        let mealType = event.target.name.toUpperCase();
+        this.setState(prevState => ({
+            travelReport: {
+                ...prevState.travelReport,
+                dailyRateCalculation: {
+                    ...prevState.travelReport.dailyRateCalculation,
+                    meals: {
+                       ...prevState.travelReport.dailyRateCalculation.meals,
+                       [mealType]: numberOfMeals
                     }
                 }
             }
@@ -260,25 +277,28 @@ class TravelEdit extends Component {
                         name="breakfast"
                         data-id="breakfast"
                         id="breakfast"
-                        value={travelReport.dailyRateCalculation.meals.BREAKFAST} 
+                        value={travelReport.dailyRateCalculation.meals.BREAKFAST}
+                        onChange={(e) => this.addNumberOfMeals(e)} 
                         className="breakfast"
                         />
-                        <label htmlFor="breakfast">Lunch</label>
+                        <label htmlFor="lunch">Lunch</label>
                         <input
                         type="text"
                         name="lunch"
                         data-id="lunch"
                         id="lunch"
                         value={travelReport.dailyRateCalculation.meals.LUNCH} 
+                        onChange={(e) => this.addNumberOfMeals(e)} 
                         className="lunch"
                         />
-                        <label htmlFor="breakfast">Dinner</label>
+                        <label htmlFor="dinner">Dinner</label>
                         <input
                         type="text"
                         name="dinner"
                         data-id="dinner"
                         id="dinner"
-                        value={travelReport.dailyRateCalculation.meals.DINNER} 
+                        value={travelReport.dailyRateCalculation.meals.DINNER}
+                        onChange={(e) => this.addNumberOfMeals(e)}  
                         className="dinner"
                         />
                     </div>
