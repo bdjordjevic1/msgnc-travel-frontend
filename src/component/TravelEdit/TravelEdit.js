@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker'
+import Meal from '../Meal/Meal';
+import Currency from '../Currency/Currency';
+import InputField from '../InputField/InputField';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -39,9 +42,9 @@ class TravelEdit extends Component {
                     end: new Date()
                 },
                 meals: {
-                    BREAKFAST: null,
-                    LUNCH: null,
-                    DINNER: null
+                    BREAKFAST: 0,
+                    LUNCH: 0,
+                    DINNER: 0
                 },
                 dailyRate: 0     
             }
@@ -52,7 +55,7 @@ class TravelEdit extends Component {
 
     handleChange = (e) => {
         const {name, value, className} = e.target;
-
+        //TODO: Remove this default method call
         if (["price", "description", "currency"].includes(className) ) {
             let {travelReport} = this.state;
 
@@ -81,6 +84,7 @@ class TravelEdit extends Component {
     }
 
     handleDateChange = (date, id) => {
+        console.log("BBBB");
         if (id === "dateOfSubmission") {
             this.setState(prevState => ({
                 travelReport: {
@@ -156,7 +160,7 @@ class TravelEdit extends Component {
       }
 
     render() {
-        let { travelReport, currencies, locations } = this.state;
+        let { travelReport, locations } = this.state;
 
         let locationOptionItems = locations.map((location) =>
                                     <option
@@ -205,49 +209,31 @@ class TravelEdit extends Component {
                         <button onClick={this.addExpense}>Add expense</button>
                         {
                             travelReport.additionalExpense.expenses.map((val, idx)=> {
-                                let priceId = `price-${idx}`, 
-                                    descriptionId = `description-${idx}`,
-                                    currencyId = `currency-${idx}`;
-
-                                let optionItems = currencies.map((currency) =>
-                                    <option
-                                    key={currency.name}
-                                    value={JSON.stringify(currency)}>
-                                        {currency.symbol}
-                                    </option>
-                                );
 
                                 return (
-                                <div key={idx}>
-                                    <p>{`Expense #${idx + 1}`}</p>
-                                    <label htmlFor={priceId}>Price</label>
-                                    <input
-                                    type="text"
-                                    name={priceId}
-                                    data-id={idx}
-                                    id={priceId}
-                                    value={travelReport.additionalExpense.expenses[idx].price} 
-                                    className="price"
-                                    />
+                                    <div key={idx}>
+                                        <p>{`Expense #${idx + 1}`}</p>
 
-                                    <select 
-                                    name={currencyId} 
-                                    data-id={idx} 
-                                    id={currencyId} 
-                                    className="currency">
-                                        {optionItems}
-                                    </select>
+                                        <InputField
+                                            type="text"
+                                            name="price"
+                                            id={idx}
+                                            value={travelReport.additionalExpense.expenses[idx].price}
+                                        />
 
-                                    <label htmlFor={descriptionId}>Description</label>
-                                    <input
-                                    type="text"
-                                    name={descriptionId}
-                                    data-id={idx}
-                                    id={descriptionId}
-                                    value={travelReport.additionalExpense.expenses[idx].description} 
-                                    className="description"
-                                    />
-                                </div>
+                                        <Currency
+                                            id={idx}
+                                            currencies={this.state.currencies}
+                                            getCurrencies={(currencies) => this.setState({ currencies: currencies })}
+                                        />
+
+                                        <InputField
+                                            type="text"
+                                            name="description"
+                                            id={idx}
+                                            value={travelReport.additionalExpense.expenses[idx].description}
+                                        />
+                                    </div>
                                 )
                             })
                         }
@@ -271,36 +257,15 @@ class TravelEdit extends Component {
                             dateFormat="MMMM d, yyyy h:mm aa"
                             timeCaption="time"
                         />
-                        <label htmlFor="breakfast">Breakfast</label>
-                        <input
-                        type="text"
-                        name="breakfast"
-                        data-id="breakfast"
-                        id="breakfast"
-                        value={travelReport.dailyRateCalculation.meals.BREAKFAST}
-                        onChange={(e) => this.addNumberOfMeals(e)} 
-                        className="breakfast"
-                        />
-                        <label htmlFor="lunch">Lunch</label>
-                        <input
-                        type="text"
-                        name="lunch"
-                        data-id="lunch"
-                        id="lunch"
-                        value={travelReport.dailyRateCalculation.meals.LUNCH} 
-                        onChange={(e) => this.addNumberOfMeals(e)} 
-                        className="lunch"
-                        />
-                        <label htmlFor="dinner">Dinner</label>
-                        <input
-                        type="text"
-                        name="dinner"
-                        data-id="dinner"
-                        id="dinner"
-                        value={travelReport.dailyRateCalculation.meals.DINNER}
-                        onChange={(e) => this.addNumberOfMeals(e)}  
-                        className="dinner"
-                        />
+                        <Meal meal="breakfast"
+                            addNumberOfMeals={(e) => this.addNumberOfMeals(e)}
+                            value={travelReport.dailyRateCalculation.meals.BREAKFAST}/>
+                        <Meal meal="lunch"
+                            addNumberOfMeals={(e) => this.addNumberOfMeals(e)}
+                            value={travelReport.dailyRateCalculation.meals.LUNCH}/>
+                        <Meal meal="dinner"
+                            addNumberOfMeals={(e) => this.addNumberOfMeals(e)}
+                            value={travelReport.dailyRateCalculation.meals.DINNER}/>
                     </div>
                 <input type="submit" value="Submit" /> 
                 </form>
