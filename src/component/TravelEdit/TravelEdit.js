@@ -4,6 +4,7 @@ import Meal from '../Meal/Meal';
 import Currency from '../Currency/Currency';
 import InputField from '../InputField/InputField';
 import Location from '../Location/Location';
+import Transportation from '../Transportation/Transportation';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -51,7 +52,8 @@ class TravelEdit extends Component {
             }
         },
         currencies: [],
-        locations: []
+        locations: [],
+        transportations: []
     }
 
     handleChange = (e) => {
@@ -83,6 +85,17 @@ class TravelEdit extends Component {
         //         }
         //     }))
         // }
+    }
+
+    handleTransportationChange = (e) => {
+        let { value } = e.target;
+
+        this.setState(prevState => ({
+            travelReport: {
+                ...prevState.travelReport,
+                transportationType: value
+            }
+        }))
     }
 
     handleLocationChange = (e) => {
@@ -129,7 +142,7 @@ class TravelEdit extends Component {
                     ...prevState.travelReport.dailyRateCalculation,
                     meals: {
                         ...prevState.travelReport.dailyRateCalculation.meals,
-                        [mealType]: numberOfMeals
+                        [mealType]: Number(numberOfMeals)
                     }
                 }
             }
@@ -138,9 +151,7 @@ class TravelEdit extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(e.target)
         var travelReport = this.state;
-        console.log(travelReport)
 
         fetch(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/reports/generate`, {
             method: 'POST',
@@ -185,20 +196,12 @@ class TravelEdit extends Component {
                             value={travelReport.lastName}
                         />
 
-                        <select name="transportationType" id="transportationType" className="transportationType">
-                            <option key="default" value="default">
-                                Choose transportation type
-                            </option>
-                            <option key="RENT_A_CAR" value="RENT_A_CAR">
-                                Rent a car
-                            </option>
-                            <option key="PLANE" value="PLANE">
-                                Plane
-                            </option>
-                            <option key="BUS" value="BUS">
-                                Bus
-                            </option>
-                        </select>
+                        <Transportation
+                            id='transportationType'
+                            transportations={this.state.transportations}
+                            getTransportations={(transportations) => this.setState({ transportations: transportations })}
+                            handleChange={this.handleTransportationChange}
+                        />
 
                         <Location
                             id='locationTo'
@@ -259,13 +262,13 @@ class TravelEdit extends Component {
                             timeCaption="time"
                         />
                         <Meal meal="breakfast"
-                            addNumberOfMeals={(e) => this.addNumberOfMeals(e)}
+                            addNumberOfMeals={this.addNumberOfMeals}
                             value={travelReport.dailyRateCalculation.meals.BREAKFAST} />
                         <Meal meal="lunch"
-                            addNumberOfMeals={(e) => this.addNumberOfMeals(e)}
+                            addNumberOfMeals={this.addNumberOfMeals}
                             value={travelReport.dailyRateCalculation.meals.LUNCH} />
                         <Meal meal="dinner"
-                            addNumberOfMeals={(e) => this.addNumberOfMeals(e)}
+                            addNumberOfMeals={this.addNumberOfMeals}
                             value={travelReport.dailyRateCalculation.meals.DINNER} />
                     </div>
                     <input type="submit" value="Submit" />

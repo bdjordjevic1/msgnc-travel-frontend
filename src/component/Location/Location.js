@@ -9,7 +9,6 @@ class Location extends React.Component {
     }
 
     populateLocations = (locations) => {
-        console.log(locations);
         return locations.map((location) => this.populateLocation(location));
     }
 
