@@ -2,13 +2,14 @@ import React from 'react';
 class Currency extends React.Component {
 
     async componentDidMount() {
-        const currenciesResponse = await fetch(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/currencies`);
-        const currenciesJson = await currenciesResponse.json();
+        let currenciesResponse = await fetch(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/currencies`);
+        let currenciesJson = await currenciesResponse.json();
         this.props.getCurrencies(currenciesJson);
     }
 
 
     populateCurrencies = (currencies) => {
+        console.log(currencies);
         return currencies.map((currency) => this.populateCurrency(currency));
     }
 

@@ -3,7 +3,7 @@ import React from 'react';
 class InputField extends React.Component {
 
     render() {
-        let uniqueID = `${this.props.name}-${this.props.id}`;
+        let uniqueID = this.props.id ? `${this.props.name}-${this.props.id}` : this.props.name;
 
         return <div>
             <label htmlFor={uniqueID}>{this.props.name}</label>

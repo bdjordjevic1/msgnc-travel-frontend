@@ -3,11 +3,12 @@ import DatePicker from 'react-datepicker'
 import Meal from '../Meal/Meal';
 import Currency from '../Currency/Currency';
 import InputField from '../InputField/InputField';
+import Location from '../Location/Location';
 
 import "react-datepicker/dist/react-datepicker.css";
 
 class TravelEdit extends Component {
-    
+
     state = {
         travelReport: {
             dateOfSubmission: new Date(),
@@ -46,7 +47,7 @@ class TravelEdit extends Component {
                     LUNCH: 0,
                     DINNER: 0
                 },
-                dailyRate: 0     
+                dailyRate: 0
             }
         },
         currencies: [],
@@ -54,16 +55,16 @@ class TravelEdit extends Component {
     }
 
     handleChange = (e) => {
-        const {name, value, className} = e.target;
+        const { name, value, className } = e.target;
         //TODO: Remove this default method call
-        if (["price", "description", "currency"].includes(className) ) {
-            let {travelReport} = this.state;
+        if (["price", "description", "currency"].includes(className)) {
+            let { travelReport } = this.state;
 
-            travelReport.additionalExpense.expenses[e.target.dataset.id][className] = 
-                                                (className === "currency") ? JSON.parse(value) : value;
+            travelReport.additionalExpense.expenses[e.target.dataset.id][className] =
+                (className === "currency") ? JSON.parse(value) : value;
 
             const expenses = travelReport.additionalExpense.expenses;
-       
+
             this.setState(prevState => ({
                 travelReport: {
                     ...prevState.travelReport,
@@ -73,18 +74,29 @@ class TravelEdit extends Component {
                     }
                 }
             }))
-        } else {
-            this.setState(prevState => ({
-                travelReport: {
-                    ...prevState.travelReport,
-                    [name]: (className === "locationTo") ? JSON.parse(value) : value
-                }
-            }))
-        }
+        } 
+        // else {
+        //     this.setState(prevState => ({
+        //         travelReport: {
+        //             ...prevState.travelReport,
+        //             [name]: value
+        //         }
+        //     }))
+        // }
+    }
+
+    handleLocationChange = (e) => {
+        let { value } = e.target;
+
+        this.setState(prevState => ({
+            travelReport: {
+                ...prevState.travelReport,
+                locationTo: JSON.parse(value)
+            }
+        }))
     }
 
     handleDateChange = (date, id) => {
-        console.log("BBBB");
         if (id === "dateOfSubmission") {
             this.setState(prevState => ({
                 travelReport: {
@@ -99,8 +111,8 @@ class TravelEdit extends Component {
                 dailyRateCalculation: {
                     ...prevState.travelReport.dailyRateCalculation,
                     travelPeriod: {
-                       ...prevState.travelReport.dailyRateCalculation.travelPeriod,
-                       [id]: date
+                        ...prevState.travelReport.dailyRateCalculation.travelPeriod,
+                        [id]: date
                     }
                 }
             }
@@ -116,59 +128,41 @@ class TravelEdit extends Component {
                 dailyRateCalculation: {
                     ...prevState.travelReport.dailyRateCalculation,
                     meals: {
-                       ...prevState.travelReport.dailyRateCalculation.meals,
-                       [mealType]: numberOfMeals
+                        ...prevState.travelReport.dailyRateCalculation.meals,
+                        [mealType]: numberOfMeals
                     }
                 }
             }
         }))
     }
-  
-    handleSubmit = (e) => { 
+
+    handleSubmit = (e) => {
         e.preventDefault();
         console.log(e.target)
         var travelReport = this.state;
         console.log(travelReport)
-    
+
         fetch(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/reports/generate`, {
             method: 'POST',
             body: JSON.stringify(travelReport),
             headers: new Headers({
                 'Content-Type': 'application/json'
             })
-        }); 
-    }  
-  
+        });
+    }
+
     addExpense = (e) => {
         e.preventDefault()
         let { travelReport } = this.state;
         const updatedExpenses = travelReport.additionalExpense.expenses.slice();
-        updatedExpenses.push({price:"", description:""});
+        updatedExpenses.push({ price: "", description: "" });
         travelReport.additionalExpense.expenses = updatedExpenses;
 
         this.setState({ travelReport: travelReport });
     }
 
-    async componentDidMount() {
-        const currenciesResponse = await fetch(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/currencies`);
-        const currenciesJson = await currenciesResponse.json();
-        this.setState({ currencies: currenciesJson });
-
-        const locationResponse = await fetch(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/locations`);
-        const locationJson = await locationResponse.json();
-        this.setState({ locations: locationJson });
-      }
-
     render() {
-        let { travelReport, locations } = this.state;
-
-        let locationOptionItems = locations.map((location) =>
-                                    <option
-                                    key={location.isoCode}
-                                    value={JSON.stringify(location)}>
-                                        {location.country}
-                                    </option>
-                                );
+        let { travelReport } = this.state;
 
         return (
             <div className="travelData">
@@ -180,11 +174,16 @@ class TravelEdit extends Component {
                             onChange={(date) => this.handleDateChange(date, "dateOfSubmission")}
                             dateFormat="MMMM d, yyyy"
                         />
-                        <label htmlFor="firstName">Enter first name</label>
-                        <input id="firstName" name="firstName" type="text" />
-
-                        <label htmlFor="lastName">Enter last name</label>
-                        <input id="lastName" name="lastName" type="text" />
+                        <InputField
+                            type="text"
+                            name="firstName"
+                            value={travelReport.firstName}
+                        />
+                        <InputField
+                            type="text"
+                            name="lastName"
+                            value={travelReport.lastName}
+                        />
 
                         <select name="transportationType" id="transportationType" className="transportationType">
                             <option key="default" value="default">
@@ -199,16 +198,18 @@ class TravelEdit extends Component {
                             <option key="BUS" value="BUS">
                                 Bus
                             </option>
-                        </select>  
+                        </select>
 
-                        <label htmlFor="locationTo">Select country where you have been travelling to</label>
-                        <select name="locationTo" id="locationTo" className="locationTo">
-                            {locationOptionItems}
-                        </select>        
+                        <Location
+                            id='locationTo'
+                            locations={this.state.locations}
+                            getLocations={(locations) => this.setState({ locations: locations })}
+                            handleChange={this.handleLocationChange}
+                        />
 
                         <button onClick={this.addExpense}>Add expense</button>
                         {
-                            travelReport.additionalExpense.expenses.map((val, idx)=> {
+                            travelReport.additionalExpense.expenses.map((val, idx) => {
 
                                 return (
                                     <div key={idx}>
@@ -237,7 +238,7 @@ class TravelEdit extends Component {
                                 )
                             })
                         }
-                        
+
                         <DatePicker
                             selected={travelReport.dailyRateCalculation.travelPeriod.start}
                             onChange={(date) => this.handleDateChange(date, "start")}
@@ -259,19 +260,19 @@ class TravelEdit extends Component {
                         />
                         <Meal meal="breakfast"
                             addNumberOfMeals={(e) => this.addNumberOfMeals(e)}
-                            value={travelReport.dailyRateCalculation.meals.BREAKFAST}/>
+                            value={travelReport.dailyRateCalculation.meals.BREAKFAST} />
                         <Meal meal="lunch"
                             addNumberOfMeals={(e) => this.addNumberOfMeals(e)}
-                            value={travelReport.dailyRateCalculation.meals.LUNCH}/>
+                            value={travelReport.dailyRateCalculation.meals.LUNCH} />
                         <Meal meal="dinner"
                             addNumberOfMeals={(e) => this.addNumberOfMeals(e)}
-                            value={travelReport.dailyRateCalculation.meals.DINNER}/>
+                            value={travelReport.dailyRateCalculation.meals.DINNER} />
                     </div>
-                <input type="submit" value="Submit" /> 
+                    <input type="submit" value="Submit" />
                 </form>
             </div>
-      );
+        );
     }
-  }
+}
 
 export default TravelEdit
