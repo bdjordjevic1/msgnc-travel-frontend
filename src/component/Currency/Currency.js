@@ -1,4 +1,5 @@
 import React from 'react';
+
 class Currency extends React.Component {
 
     async componentDidMount() {
@@ -9,7 +10,6 @@ class Currency extends React.Component {
 
 
     populateCurrencies = (currencies) => {
-        console.log(currencies);
         return currencies.map((currency) => this.populateCurrency(currency));
     }
 
@@ -31,6 +31,7 @@ class Currency extends React.Component {
                 name={currencyId}
                 data-id={this.props.id}
                 id={currencyId}
+                onChange={this.props.handleChange}
                 className="currency">
                 {optionItems}
             </select>

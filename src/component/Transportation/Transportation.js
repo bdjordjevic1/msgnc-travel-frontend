@@ -13,17 +13,17 @@ class Transportation extends React.Component {
     }
 
     populateTransportation = (transportation) => {
-        return <option
+        return (<option
             key={transportation}
             value={transportation}>
             {transportation}
-        </option>
+        </option>)
     }
 
     render() {
         let optionItems = this.populateTransportations(this.props.transportations);
 
-        return <div>
+        return <>
             <label htmlFor={this.props.id}>Transportation type</label>
             <select
                 name={this.props.id}
@@ -31,9 +31,14 @@ class Transportation extends React.Component {
                 id={this.props.id}
                 className={this.props.id}
                 onChange={this.props.handleChange}>
+                <option
+                    key="DEFAULT"
+                    value="null">
+                    Choose transportation
+                </option>
                 {optionItems}
             </select>
-        </div>
+        </>
     }
 }
 

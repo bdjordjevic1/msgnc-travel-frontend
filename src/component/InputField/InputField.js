@@ -3,17 +3,19 @@ import React from 'react';
 class InputField extends React.Component {
 
     render() {
-        let uniqueID = this.props.id ? `${this.props.name}-${this.props.id}` : this.props.name;
+        const { id, type, name, value, handleChange } = this.props;
+        let uniqueID = id ? `${name}-${id}` : name;
 
         return <div>
-            <label htmlFor={uniqueID}>{this.props.name}</label>
+            <label htmlFor={uniqueID}>{name}</label>
             <input
-                type={this.props.type}
+                type={type}
                 name={uniqueID}
-                data-id={this.props.id}
+                data-id={id}
                 id={uniqueID}
-                value={this.props.value}
-                className={this.props.name}
+                value={value}
+                onChange={handleChange}
+                className={name}
             />
         </div>
     }

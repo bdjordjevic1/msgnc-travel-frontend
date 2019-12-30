@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import DatePicker from 'react-datepicker'
 import Meal from '../Meal/Meal';
-import Currency from '../Currency/Currency';
 import InputField from '../InputField/InputField';
 import Location from '../Location/Location';
 import Transportation from '../Transportation/Transportation';
+import Expense from '../Expense/Expense'
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -51,14 +51,18 @@ class TravelEdit extends Component {
                 dailyRate: 0
             }
         },
+        travelOrder: {
+            dateOfSubmission: new Date(),
+            includedExpenses: "",
+            purposeOfTravel: ""
+        },
         currencies: [],
         locations: [],
         transportations: []
     }
 
-    handleChange = (e) => {
-        const { name, value, className } = e.target;
-        //TODO: Remove this default method call
+    handleExpensesChange = (e) => {
+        const { value, className } = e.target;
         if (["price", "description", "currency"].includes(className)) {
             let { travelReport } = this.state;
 
@@ -76,15 +80,29 @@ class TravelEdit extends Component {
                     }
                 }
             }))
-        } 
-        // else {
-        //     this.setState(prevState => ({
-        //         travelReport: {
-        //             ...prevState.travelReport,
-        //             [name]: value
-        //         }
-        //     }))
-        // }
+        }
+    }
+
+    handleNameChange = (e) => {
+        let { value, name } = e.target;
+
+        this.setState(prevState => ({
+            travelReport: {
+                ...prevState.travelReport,
+                [name]: value
+            }
+        }))
+    }
+
+    handleOrderNameChange = (e) => {
+        let { value, name } = e.target;
+
+        this.setState(prevState => ({
+            travelOrder: {
+                ...prevState.travelOrder,
+                [name]: value
+            }
+        }))
     }
 
     handleTransportationChange = (e) => {
@@ -132,6 +150,15 @@ class TravelEdit extends Component {
         }))
     }
 
+    handleOrderDateChange = (date, name) => {
+        this.setState(prevState => ({
+            travelOrder: {
+                ...prevState.travelOrder,
+                [name]: date
+            }
+        }))
+    }
+
     addNumberOfMeals = (event) => {
         let numberOfMeals = event.target.value;
         let mealType = event.target.name.toUpperCase();
@@ -173,27 +200,57 @@ class TravelEdit extends Component {
     }
 
     render() {
-        let { travelReport } = this.state;
+        let { travelReport, travelOrder, currencies } = this.state;
 
         return (
             <div className="travelData">
                 <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
 
                     <div className="travelOrder">
+                    <label htmlFor="orderDateOfSubmission">Date of submission</label>
                         <DatePicker
-                            selected={travelReport.dailyRateCalculation.travelPeriod.end}
+                            id="orderDateOfSubmission"
+                            selected={travelOrder.dateOfSubmission}
+                            onChange={(date) => this.handleOrderDateChange(date, "dateOfSubmission")}
+                            dateFormat="MMMM d, yyyy"
+                            value={travelOrder.dateOfSubmission}
+                        />
+
+                        <InputField
+                            type="text"
+                            name="includedExpenses"
+                            value={travelOrder.includedExpenses}
+                            handleChange={this.handleOrderNameChange}
+                        />
+
+                        <InputField
+                            type="text"
+                            name="purposeOfTravel"
+                            value={travelOrder.purposeOfTravel}
+                            handleChange={this.handleOrderNameChange}
+                        />
+                    </div>
+
+                    <div className="travelReport">
+                        <label htmlFor="reportDateOfSubmission">Date of submission</label>
+                        <DatePicker
+                            id="reportDateOfSubmission"
+                            selected={travelReport.dateOfSubmission}
                             onChange={(date) => this.handleDateChange(date, "dateOfSubmission")}
                             dateFormat="MMMM d, yyyy"
+                            value={travelReport.dateOfSubmission}
                         />
                         <InputField
                             type="text"
                             name="firstName"
                             value={travelReport.firstName}
+                            handleChange={this.handleNameChange}
                         />
                         <InputField
                             type="text"
                             name="lastName"
                             value={travelReport.lastName}
+                            handleChange={this.handleNameChange}
                         />
 
                         <Transportation
@@ -210,37 +267,13 @@ class TravelEdit extends Component {
                             handleChange={this.handleLocationChange}
                         />
 
-                        <button onClick={this.addExpense}>Add expense</button>
-                        {
-                            travelReport.additionalExpense.expenses.map((val, idx) => {
-
-                                return (
-                                    <div key={idx}>
-                                        <p>{`Expense #${idx + 1}`}</p>
-
-                                        <InputField
-                                            type="text"
-                                            name="price"
-                                            id={idx}
-                                            value={travelReport.additionalExpense.expenses[idx].price}
-                                        />
-
-                                        <Currency
-                                            id={idx}
-                                            currencies={this.state.currencies}
-                                            getCurrencies={(currencies) => this.setState({ currencies: currencies })}
-                                        />
-
-                                        <InputField
-                                            type="text"
-                                            name="description"
-                                            id={idx}
-                                            value={travelReport.additionalExpense.expenses[idx].description}
-                                        />
-                                    </div>
-                                )
-                            })
-                        }
+                        <Expense
+                            expenses={travelReport.additionalExpense.expenses}
+                            currencies={currencies}
+                            getCurrencies={(currencies) => this.setState({ currencies: currencies })}
+                            addExpense={this.addExpense}
+                            handleChange={this.handleExpensesChange}
+                        />
 
                         <DatePicker
                             selected={travelReport.dailyRateCalculation.travelPeriod.start}
@@ -250,6 +283,7 @@ class TravelEdit extends Component {
                             timeIntervals={15}
                             dateFormat="MMMM d, yyyy h:mm aa"
                             timeCaption="time"
+                            value={travelReport.dailyRateCalculation.travelPeriod.start}
                         />
                         <DatePicker
                             id="end"
@@ -260,6 +294,7 @@ class TravelEdit extends Component {
                             timeIntervals={15}
                             dateFormat="MMMM d, yyyy h:mm aa"
                             timeCaption="time"
+                            value={travelReport.dailyRateCalculation.travelPeriod.end}
                         />
                         <Meal meal="breakfast"
                             addNumberOfMeals={this.addNumberOfMeals}
