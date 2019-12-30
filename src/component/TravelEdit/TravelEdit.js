@@ -186,6 +186,10 @@ class TravelEdit extends Component {
             headers: new Headers({
                 'Content-Type': 'application/json'
             })
+        })
+        .then(response => response.json())
+        .then(data => {
+            window.open(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/reports/show?filePath=${data.path}`, "_blank");
         });
     }
 
