@@ -1,6 +1,10 @@
 {
   "name": "msgnc-travel-frontend",
   "version": "0.1.0",
+  "description": "a really cool app",
+  "engines": {
+    "node": "12.13.0"
+  },
   "private": true,
   "dependencies": {
     "react": "^16.8.6",
