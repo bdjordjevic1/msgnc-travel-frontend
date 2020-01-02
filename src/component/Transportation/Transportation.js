@@ -22,14 +22,15 @@ class Transportation extends React.Component {
 
     render() {
         let optionItems = this.populateTransportations(this.props.transportations);
+        const {labelName, labelClassName, className} = this.props;
 
         return <>
-            <label htmlFor={this.props.id}>Transportation type</label>
+            <label className={labelClassName} htmlFor={this.props.id}>{labelName}</label>
             <select
+                className={className}
                 name={this.props.id}
                 data-id={this.props.id}
                 id={this.props.id}
-                className={this.props.id}
                 onChange={this.props.handleChange}>
                 <option
                     key="DEFAULT"

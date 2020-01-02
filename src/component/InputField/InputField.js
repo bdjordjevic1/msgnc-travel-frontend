@@ -3,11 +3,11 @@ import React from 'react';
 class InputField extends React.Component {
 
     render() {
-        const { id, type, name, value, handleChange } = this.props;
+        const { id, type, name, value, handleChange, className, labelName, labelClassName } = this.props;
         let uniqueID = id ? `${name}-${id}` : name;
 
         return <div>
-            <label htmlFor={uniqueID}>{name}</label>
+            <label className={labelClassName} htmlFor={uniqueID}>{labelName}</label>
             <input
                 type={type}
                 name={uniqueID}
@@ -15,7 +15,7 @@ class InputField extends React.Component {
                 id={uniqueID}
                 value={value}
                 onChange={handleChange}
-                className={name}
+                className={className}
             />
         </div>
     }

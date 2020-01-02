@@ -22,14 +22,15 @@ class Location extends React.Component {
 
     render() {
         let optionItems = this.populateLocations(this.props.locations);
+        const {labelName, labelClassName, className} = this.props;
 
         return <div>
-            <label htmlFor={this.props.id}>Country of travel</label>
+            <label className={labelClassName} htmlFor={this.props.id}>{labelName}</label>
             <select
                 name={this.props.id}
                 data-id={this.props.id}
                 id={this.props.id}
-                className="location"
+                className={className}
                 onChange={this.props.handleChange}>
                 {optionItems}
             </select>

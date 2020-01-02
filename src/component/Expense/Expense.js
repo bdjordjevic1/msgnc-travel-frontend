@@ -10,9 +10,12 @@ class Expense extends React.Component {
 
                 return (
                     <div key={idx}>
-                        <p>{`Expense #${idx + 1}`}</p>
+                        <h2>{`Expense #${idx + 1}`}</h2>
 
                         <InputField
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="Price"
                             type="text"
                             name="price"
                             id={idx}
@@ -21,6 +24,10 @@ class Expense extends React.Component {
                         />
 
                         <Currency
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="Currency"
+                            name="currency"
                             id={idx}
                             currencies={this.props.currencies}
                             getCurrencies={this.props.getCurrencies}
@@ -28,6 +35,9 @@ class Expense extends React.Component {
                         />
 
                         <InputField
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="Description"
                             type="text"
                             name="description"
                             id={idx}
@@ -39,7 +49,7 @@ class Expense extends React.Component {
             });
 
             return <div>
-                <button onClick={this.props.addExpense}>Add expense</button>
+                <button className="btn btn-secondary" onClick={this.props.addExpense}>Add expense</button>
                 {expenses}
             </div>;
     

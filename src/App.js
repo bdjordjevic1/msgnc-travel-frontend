@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import './App.scss';
 import TravelEdit from './component/TravelEdit/TravelEdit';
 
 function App() {

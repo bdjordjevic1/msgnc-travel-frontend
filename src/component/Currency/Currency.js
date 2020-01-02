@@ -25,14 +25,16 @@ class Currency extends React.Component {
         let currencyId = `currency-${this.props.id}`,
             optionItems = this.populateCurrencies(this.props.currencies);
 
+            const {labelName, labelClassName, className, name} = this.props;
+
         return <div>
-            <label htmlFor={currencyId}>currency</label>
+            <label className={labelClassName} htmlFor={currencyId}>{labelName}</label>
             <select
-                name={currencyId}
+                name={name}
                 data-id={this.props.id}
                 id={currencyId}
                 onChange={this.props.handleChange}
-                className="currency">
+                className={className}>
                 {optionItems}
             </select>
         </div>

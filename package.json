@@ -2,11 +2,11 @@
   "name": "msgnc-travel-frontend",
   "version": "0.1.0",
   "description": "a really cool app",
-  "engines": {
-    "node": "12.13.0"
-  },
   "private": true,
   "dependencies": {
+    "bootstrap": "^4.4.1",
+    "har-schema": "^2.0.0",
+    "node-sass": "^4.13.0",
     "react": "^16.8.6",
     "react-datepicker": "^2.6.0",
     "react-dom": "^16.8.6",

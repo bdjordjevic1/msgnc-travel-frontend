@@ -211,33 +211,46 @@ class TravelEdit extends Component {
                 <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
 
                     <div className="travelOrder">
-                    <label htmlFor="orderDateOfSubmission">Date of submission</label>
-                        <DatePicker
-                            id="orderDateOfSubmission"
-                            selected={travelOrder.dateOfSubmission}
-                            onChange={(date) => this.handleOrderDateChange(date, "dateOfSubmission")}
-                            dateFormat="MMMM d, yyyy"
-                            value={travelOrder.dateOfSubmission}
-                        />
+                    <h1>Travel Order</h1>
+                        <div>
+                            <label className="form-control-lg" htmlFor="orderDateOfSubmission">Date of submission</label>
+                            <DatePicker
+                                className="form-control-lg"
+                                id="orderDateOfSubmission"
+                                selected={travelOrder.dateOfSubmission}
+                                onChange={(date) => this.handleOrderDateChange(date, "dateOfSubmission")}
+                                dateFormat="MMMM d, yyyy"
+                                value={travelOrder.dateOfSubmission}
+                            />
+                        </div>
 
                         <InputField
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
                             type="text"
                             name="includedExpenses"
+                            labelName="Included expenses"
                             value={travelOrder.includedExpenses}
                             handleChange={this.handleOrderNameChange}
                         />
 
                         <InputField
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
                             type="text"
                             name="purposeOfTravel"
+                            labelName="Purpose of travel"
                             value={travelOrder.purposeOfTravel}
                             handleChange={this.handleOrderNameChange}
                         />
                     </div>
 
                     <div className="travelReport">
-                        <label htmlFor="reportDateOfSubmission">Date of submission</label>
+                        <h1>Travel Order</h1>
+
+                        <label className="form-control-lg" htmlFor="reportDateOfSubmission">Date of submission</label>
                         <DatePicker
+                            className="form-control-lg"
                             id="reportDateOfSubmission"
                             selected={travelReport.dateOfSubmission}
                             onChange={(date) => this.handleDateChange(date, "dateOfSubmission")}
@@ -245,12 +258,18 @@ class TravelEdit extends Component {
                             value={travelReport.dateOfSubmission}
                         />
                         <InputField
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="First name"
                             type="text"
                             name="firstName"
                             value={travelReport.firstName}
                             handleChange={this.handleNameChange}
                         />
                         <InputField
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="Last name"
                             type="text"
                             name="lastName"
                             value={travelReport.lastName}
@@ -258,6 +277,9 @@ class TravelEdit extends Component {
                         />
 
                         <Transportation
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="Type of transportation"
                             id='transportationType'
                             transportations={this.state.transportations}
                             getTransportations={(transportations) => this.setState({ transportations: transportations })}
@@ -265,6 +287,9 @@ class TravelEdit extends Component {
                         />
 
                         <Location
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="Country of travel"
                             id='locationTo'
                             locations={this.state.locations}
                             getLocations={(locations) => this.setState({ locations: locations })}
@@ -279,38 +304,57 @@ class TravelEdit extends Component {
                             handleChange={this.handleExpensesChange}
                         />
 
-                        <DatePicker
-                            selected={travelReport.dailyRateCalculation.travelPeriod.start}
-                            onChange={(date) => this.handleDateChange(date, "start")}
-                            showTimeSelect
-                            timeFormat="HH:mm"
-                            timeIntervals={15}
-                            dateFormat="MMMM d, yyyy h:mm aa"
-                            timeCaption="time"
-                            value={travelReport.dailyRateCalculation.travelPeriod.start}
-                        />
-                        <DatePicker
-                            id="end"
-                            selected={travelReport.dailyRateCalculation.travelPeriod.end}
-                            onChange={(date) => this.handleDateChange(date, "end")}
-                            showTimeSelect
-                            timeFormat="HH:mm"
-                            timeIntervals={15}
-                            dateFormat="MMMM d, yyyy h:mm aa"
-                            timeCaption="time"
-                            value={travelReport.dailyRateCalculation.travelPeriod.end}
-                        />
+                        <div>
+                        <label className="form-control-lg" htmlFor="travelPeriodStart">Departure day</label>
+                            <DatePicker
+                                className="form-control-lg"  
+                                id="travelPeriodStart"
+                                selected={travelReport.dailyRateCalculation.travelPeriod.start}
+                                onChange={(date) => this.handleDateChange(date, "start")}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                                timeCaption="time"
+                                value={travelReport.dailyRateCalculation.travelPeriod.start}
+                            />
+                        </div>
+
+                        <div>
+                            <label className="form-control-lg" htmlFor="travelPeriodEnd">Arrival day</label>
+                            <DatePicker
+                                className="form-control-lg"
+                                id="travelPeriodEnd"
+                                selected={travelReport.dailyRateCalculation.travelPeriod.end}
+                                onChange={(date) => this.handleDateChange(date, "end")}
+                                showTimeSelect
+                                timeFormat="HH:mm"
+                                timeIntervals={15}
+                                dateFormat="MMMM d, yyyy h:mm aa"
+                                timeCaption="time"
+                                value={travelReport.dailyRateCalculation.travelPeriod.end}
+                            />
+                        </div>
                         <Meal meal="breakfast"
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="Number of breakfasts"
                             addNumberOfMeals={this.addNumberOfMeals}
                             value={travelReport.dailyRateCalculation.meals.BREAKFAST} />
                         <Meal meal="lunch"
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="Number of lunches"
                             addNumberOfMeals={this.addNumberOfMeals}
                             value={travelReport.dailyRateCalculation.meals.LUNCH} />
                         <Meal meal="dinner"
+                            className="form-control-lg d-inline"
+                            labelClassName="form-control-lg"
+                            labelName="Number of dinners"
                             addNumberOfMeals={this.addNumberOfMeals}
                             value={travelReport.dailyRateCalculation.meals.DINNER} />
                     </div>
-                    <input type="submit" value="Submit" />
+                    <input className="btn btn-primary" type="submit" value="Submit" />
                 </form>
             </div>
         );
