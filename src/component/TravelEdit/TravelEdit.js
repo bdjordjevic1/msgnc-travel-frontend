@@ -5,6 +5,7 @@ import InputField from '../InputField/InputField';
 import Location from '../Location/Location';
 import Transportation from '../Transportation/Transportation';
 import Expense from '../Expense/Expense'
+import Cookies from 'js-cookie';
 
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -61,13 +62,24 @@ class TravelEdit extends Component {
         transportations: []
     }
 
+    async componentDidMount() {
+        let csrfDTOResponse = await fetch(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/csrf/token`, {
+                credentials: 'include',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                })});
+        let csrfDTO = await csrfDTOResponse.json();
+        Cookies.set('X-CSRF-TOKEN', csrfDTO.csrfToken)
+    }
+
     handleExpensesChange = (e) => {
-        const { value, className } = e.target;
-        if (["price", "description", "currency"].includes(className)) {
+        const { value, name } = e.target;
+        if (["price", "description", "currency"].includes(name)) {
             let { travelReport } = this.state;
 
-            travelReport.additionalExpense.expenses[e.target.dataset.id][className] =
-                (className === "currency") ? JSON.parse(value) : value;
+            travelReport.additionalExpense.expenses[e.target.dataset.id][name] =
+                (name === "currency") ? JSON.parse(value) : value;
 
             const expenses = travelReport.additionalExpense.expenses;
 
@@ -179,17 +191,21 @@ class TravelEdit extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         var travelReport = this.state;
+        console.log(Cookies.get('JSESSIONID'))
 
         fetch(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/reports/generate`, {
             method: 'POST',
             body: JSON.stringify(travelReport),
+            credentials: 'include',
             headers: new Headers({
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'X-CSRF-TOKEN': Cookies.get('X-CSRF-TOKEN')
             })
         })
         .then(response => response.json())
         .then(data => {
-            window.open(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/reports/show?filePath=${data.path}`, "_blank");
+            window.open(`${process.env.REACT_APP_MSGNC_TRAVEL_BACKEND_HOST}/api/reports/show?filePath=${data.path}`);
         });
     }
 
@@ -208,7 +224,7 @@ class TravelEdit extends Component {
 
         return (
             <div className="travelData">
-                <form onSubmit={this.handleSubmit} onChange={this.handleChange}>
+                <form onSubmit={this.handleSubmit}>
 
                     <div className="travelOrder">
                     <h1>Travel Order</h1>

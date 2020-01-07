@@ -10,7 +10,7 @@ class InputField extends React.Component {
             <label className={labelClassName} htmlFor={uniqueID}>{labelName}</label>
             <input
                 type={type}
-                name={uniqueID}
+                name={name}
                 data-id={id}
                 id={uniqueID}
                 value={value}
