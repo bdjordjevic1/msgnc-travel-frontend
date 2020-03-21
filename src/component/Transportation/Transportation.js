@@ -12,7 +12,7 @@ class Transportation extends React.Component {
         return transportations.map((transportation) => this.populateTransportation(transportation));
     }
 
-    populateTransportation = (transportation) => {
+    populateTransportation (transportation) {
         return (<option
             key={transportation}
             value={transportation}>
